@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -40,26 +41,24 @@ const Navbar = () => {
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
         >
-            <Typography variant="h6" sx={{ padding: 2, textAlign: 'center' }}>
-                
+            <Typography variant="h6" sx={{color: '#000233', padding: 2, textAlign: 'center' }}>
+               Notes Buddy
             </Typography>
             <Divider />
-            <List>
+            <List sx={{color:"#000233"}}>
                 {[
-                    { text: 'Home', icon: <HomeIcon /> },
-                    { text: 'My Notes', icon: <DescriptionOutlinedIcon/> },
-                    { text: 'Sell Notes', icon: <CurrencyExchangeSharpIcon/> },
-                    { text: 'Store', icon: <StoreSharpIcon /> },
-                    { text: 'Contact', icon: <PermContactCalendarIcon /> },
+                { text: 'Home', icon: <HomeIcon />, path: '/' },
+                { text: 'My Notes', icon: <DescriptionOutlinedIcon />, path: '/notes/MyNotes' },
+                { text: 'Sell Notes', icon: <CurrencyExchangeSharpIcon />, path: '/sell/MySell' },
+                { text: 'Store', icon: <StoreSharpIcon />, path: '/store/MyStore' },
+                { text: 'Contact', icon: <PermContactCalendarIcon />, path: '/contact/MyContact' },
                 ].map((item) => (
                     <ListItem key={item.text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {item.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={item.text} />
-                        </ListItemButton>
-                    </ListItem>
+                    <ListItemButton component={Link} to={item.path}>
+                      <ListItemIcon>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.text} />
+                    </ListItemButton>
+                  </ListItem>
                 ))}
             </List>
         </Box>
@@ -67,7 +66,7 @@ const Navbar = () => {
 
     return (
         <div>
-            <AppBar position="static" sx={{ width: '100%' }}>
+            <AppBar position="static" sx={{ width: '100%',color: '#fff', backgroundColor:"#000233"}}>
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
                     <IconButton
                         edge="start"
