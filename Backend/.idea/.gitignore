@@ -1,0 +1,111 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Python cache files
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+*.pyo
+*.iml
+*.xml
+# Virtual environments
+env/
+venv/
+ENV/
+.venv/
+ENV.bak/
+venv.bak/
+
+# Django-specific
+*.log
+db.sqlite3
+media/
+staticfiles/
+
+# Ignore secret files
+.env
+*.env
+
+# Ignore migrations (optional, but recommended to track migrations)
+migrations/
+
+# IDE-specific
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# macOS-specific
+.DS_Store
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Pyre type checking
+.pyre/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# MyPy type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PyCharm
+.idea/
+
+# Pylint, Flake8, etc.
+*.pylint.d/
+pylint-output.txt
+flake8-output.txt
+
+# Editor backups
+*~
+
+# Logs
+*.log
+*.pot
+*.mo
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
