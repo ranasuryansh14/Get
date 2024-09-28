@@ -46,16 +46,40 @@ const Testimonials = () => {
   );
 };
 
-const CallToAction = () => {
+const Hero = () => {
   return (
-    <Box sx={{ padding: 4, backgroundColor: '#000233', color: '#fff', textAlign: 'center' }}>
-      <Typography variant="h4" gutterBottom>
-        Ready to get started?
-      </Typography>
-      <Button variant="contained" color="primary" href="/signup">
-        Sign Up Now
-      </Button>
-    </Box>
+    <Container sx={{ padding: 4 }}>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', sm: 'row' }, 
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: { xs: 'center', sm: 'left' }, 
+        }}
+      >
+        <Box sx={{ marginLeft: { sm: 4 }, textAlign: 'center', width: '100%' }}> 
+          <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: "700", color: '#000233' }}>
+            World-Wide Access
+          </Typography>
+          <Typography variant="h5" component="p" gutterBottom>
+            Your one-stop platform to buy and sell study notes with ease.
+            Join our community of learners and make the most out of your studies!
+          </Typography>
+        </Box>
+        <Box
+          component="img"
+          src="/images/network.png" 
+          alt="Notes Buddy"
+          sx={{
+            width: { xs: '80%', sm: '100%' }, 
+            maxWidth: '400px',
+            borderRadius: 2,
+            marginBottom: { xs: 2, sm: 0 }, 
+          }}
+        />
+      </Box>
+    </Container>
   );
 };
 
@@ -76,24 +100,24 @@ const Home = () => {
       <Box 
         sx={{ 
           display: 'flex', 
-          flexDirection: { xs: 'column', sm: 'row' }, // Stack on small screens, row on larger screens
+          flexDirection: { xs: 'column', sm: 'row' },
           alignItems: 'center',
-          justifyContent: 'center', // Center content horizontally
-          textAlign: { xs: 'center', sm: 'left' }, // Center text on small screens, left-align on larger
+          justifyContent: 'center',
+          textAlign: { xs: 'center', sm: 'left' }, 
         }}
       >
         <Box
           component="img"
-          src="/images/home.png" // Ensure the path to your image is correct
+          src="/images/home.png" 
           alt="Notes Buddy"
           sx={{
-            width: { xs: '80%', sm: '100%' }, // Responsive width
+            width: { xs: '80%', sm: '100%' },
             maxWidth: '600px',
             borderRadius: 2,
-            marginBottom: { xs: 2, sm: 0 }, // Add bottom margin for small screens
+            marginBottom: { xs: 2, sm: 0 }, 
           }}
         />
-        <Box sx={{ marginLeft: { sm: 4 }, textAlign: 'center', width: '100%' }}> {/* Center content on small screens */}
+        <Box sx={{ marginLeft: { sm: 4 }, textAlign: 'center', width: '100%' }}> 
           <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: "700", color: '#000233' }}>
             Connect, Collaborate, Conquer
           </Typography>
@@ -104,8 +128,8 @@ const Home = () => {
         </Box>
       </Box>
       <Features />
+      <Hero/>
       <Testimonials />
-      <CallToAction />
       <Footer /> 
     </Container>
   );

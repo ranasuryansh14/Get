@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Container, Box, Typography, TextField, Button, Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
-
 const SellNotes = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
     const [file, setFile] = useState(null);
+    const [image, setImage] = useState(null); 
     const [error, setError] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!file) {
-            setError('Please upload a PDF file.');
+        if (!file || !image) {
+            setError('Please upload a PDF file and an image.');
             return;
         }
 
@@ -23,10 +23,11 @@ const SellNotes = () => {
         formData.append('price', price);
         formData.append('category', category);
         formData.append('file', file);
+        formData.append('image', image); 
 
-        // Send data to the backend (replace URL with your backend endpoint)
+        // Send data to the backend 
         try {
-            const response = await fetch('YOUR_BACKEND_API_URL', {
+            const response = await fetch('http://127.0.0.1:8000/notes/', {
                 method: 'POST',
                 body: formData,
             });
@@ -39,6 +40,7 @@ const SellNotes = () => {
                 setPrice('');
                 setCategory('');
                 setFile(null);
+                setImage(null); 
                 setError('');
             } else {
                 // Handle error response
@@ -92,23 +94,44 @@ const SellNotes = () => {
                         value={category}
                         onChange={(e) => {
                             setCategory(e.target.value);
-                            setError(''); // Reset error on category change
+                            setError(''); 
                         }}
                     >
                         <MenuItem value="Science">Science</MenuItem>
                         <MenuItem value="Mathematics">Mathematics</MenuItem>
                         <MenuItem value="Literature">Literature</MenuItem>
-                        <MenuItem value="History">History</MenuItem>
-                        {/* Add more categories as needed */}
+                        <MenuItem value="History">Others</MenuItem>
+                        
                     </Select>
                     {error && <FormHelperText>{error}</FormHelperText>}
                 </FormControl>
-                <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={(e) => setFile(e.target.files[0])}
-                    required
-                />
+
+                {/* PDF file upload */}
+                <Box sx={{ marginTop: 2 }}>
+                    <Typography variant="subtitle1" component="h2" gutterBottom>
+                        Upload PDF
+                    </Typography>
+                    <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) => setFile(e.target.files[0])}
+                        required
+                    />
+                </Box>
+
+                {/* Image file upload */}
+                <Box sx={{ marginTop: 2 }}>
+                    <Typography variant="subtitle1" component="h2" gutterBottom>
+                        Upload Cover Image
+                    </Typography>
+                    <input
+                        type="file"
+                        accept="image/*" // Accepts any image type
+                        onChange={(e) => setImage(e.target.files[0])} 
+                        required
+                    />
+                </Box>
+
                 <Box sx={{ marginTop: 2 }}>
                     <Button variant="contained" color="primary" type="submit">
                         Upload Notes
