@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Typography, Button, Box } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'; 
 
 const Features = () => {
   return (
@@ -82,7 +83,6 @@ const Hero = () => {
     </Container>
   );
 };
-
 // Footer Component
 const Footer = () => {
   return (
