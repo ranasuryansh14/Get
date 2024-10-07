@@ -1,10 +1,12 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from dns.e164 import query
+
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from .serializers import *
 from .models import *
+from django.contrib.auth.models import User
+from rest_framework import generics
+from .serializers import UserSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # def home(request):
 #     return HttpResponse("This is Homepage")
@@ -44,3 +46,9 @@ class NoteViewSet(viewsets.ViewSet):
         note = self.queryset.get(pk=pk)
         note.delete()
         return Response(status=204)
+
+
+class CreateUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
