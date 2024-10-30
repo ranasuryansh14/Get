@@ -1,3 +1,3 @@
-//Constants.jsx
-export const ACCESS_TOKEN = "access";
-export const REFRESH_TOKEN = "refresh";
+// Constants.jsx
+export const ACCESS_TOKEN = 'accessToken';
+export const REFRESH_TOKEN = 'refreshToken';

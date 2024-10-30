@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ACCESS_TOKEN } from "./Constants";
 
 const Api = axios.create({
-    baseURL: "http://127.0.0.1:8000/",  // Directly set the backend URL
+    baseURL: import.meta.env.VITE_API_URL,  //  backend URL
 });
 
 Api.interceptors.request.use(

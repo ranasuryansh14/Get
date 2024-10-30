@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -21,6 +21,8 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import './Navbar.css';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'; 
+import { ACCESS_TOKEN } from "../Constants";
 
 const Navbar = () => {
     const [state, setState] = useState({
@@ -28,8 +30,15 @@ const Navbar = () => {
     });
 
     const [loginSignup, setLoginSignup] = useState(false);
-
+    const [isLoggedIn, setIsLoggedIn] = useState(false);  // New state for login status
     const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem(ACCESS_TOKEN);
+        if (token) {
+            setIsLoggedIn(true);  // Set logged-in state based on token
+        }
+    }, []);
 
     const toggleDrawer = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -39,12 +48,7 @@ const Navbar = () => {
     };
 
     const list = () => (
-        <Box
-            sx={{ width: 250 }}
-            role="presentation"
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-        >
+        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
             <Typography variant="h6" sx={{ color: '#000233', padding: 2, textAlign: 'center' }}>
                 Notes Buddy
             </Typography>
@@ -55,6 +59,7 @@ const Navbar = () => {
                     { text: 'My Notes', icon: <DescriptionOutlinedIcon />, path: '/notes/MyNotes' },
                     { text: 'Sell Notes', icon: <CurrencyExchangeSharpIcon />, path: '/sell/MySell' },
                     { text: 'Store', icon: <StoreSharpIcon />, path: '/store/MyStore' },
+                    { text: 'Cart', icon: <ShoppingCartIcon />, path: '/cart' }, // Add Cart here
                     { text: 'Contact', icon: <PermContactCalendarIcon />, path: '/contact/MyContact' },
                 ].map((item) => (
                     <ListItem key={item.text} disablePadding>
@@ -74,12 +79,17 @@ const Navbar = () => {
         }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         document.addEventListener('mousedown', handleOutsideClick);
         return () => {
             document.removeEventListener('mousedown', handleOutsideClick);
         };
     }, []);
+
+    const handleLogout = () => {
+        localStorage.clear();  // Clear all items from local storage
+        setIsLoggedIn(false);
+    };
 
     return (
         <div>
@@ -96,9 +106,15 @@ const Navbar = () => {
                     <Typography variant="h4" component="div" sx={{ flexGrow: 1, textAlign: 'center', fontFamily: "Poppins" }}>
                         Notes Buddy
                     </Typography>
-                    <IconButton aria-label="sign up" color="inherit" onClick={() => setLoginSignup(!loginSignup)}>
-                        <PersonAddIcon />
-                    </IconButton>
+                    {!isLoggedIn ? (
+                        <IconButton aria-label="sign up" color="inherit" onClick={() => setLoginSignup(!loginSignup)}>
+                            <PersonAddIcon />
+                        </IconButton>
+                    ) : (
+                        <Button color="inherit" onClick={handleLogout}>
+                            Logout
+                        </Button>
+                    )}
                     {loginSignup && (
                         <Box
                             ref={dropdownRef}
@@ -121,6 +137,7 @@ const Navbar = () => {
                                 sx={{ marginBottom: 1 }}
                                 component={Link}
                                 to="/auth/SignUp"
+                                onClick={() => setLoginSignup(false)}  // Hide dropdown after clicking
                             >
                                 Sign Up
                             </Button>
@@ -129,13 +146,14 @@ const Navbar = () => {
                                 color="primary"
                                 component={Link}
                                 to="/auth/Login"
+                                onClick={() => setLoginSignup(false)}  // Hide dropdown after clicking
                             >
                                 Login
                             </Button>
                         </Box>
                     )}
                 </Toolbar>
- </AppBar>
+            </AppBar>
             <Drawer
                 anchor="left"
                 open={state.left}
