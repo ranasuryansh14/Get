@@ -7,6 +7,8 @@ from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register('notes',NoteViewSet, basename='notes' )
+router.register('cart', CartItemViewSet, basename='cart')
+
 
 urlpatterns = router.urls
 

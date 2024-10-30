@@ -4,3 +4,4 @@ from .models import *
 
 admin.site.register(Notes)
 # admin.site.register(UserProfile)
+admin.site.register(CartItem)
