@@ -1,19 +1,32 @@
 import React, { useState } from 'react';
-import { Container, Box, Typography, TextField, Button, Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import {
+    Container, Box, Typography, TextField, Button, Select, MenuItem,
+    FormControl, InputLabel, FormHelperText, Snackbar
+} from '@mui/material';
+import { ACCESS_TOKEN } from "../../Constants"; // Ensure this matches with your constants file
+
 const SellNotes = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
     const [file, setFile] = useState(null);
-    const [image, setImage] = useState(null); 
+    const [image, setImage] = useState(null);
     const [error, setError] = useState('');
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        // Validate inputs
         if (!file || !image) {
             setError('Please upload a PDF file and an image.');
+            return;
+        }
+
+        if (price <= 0) {
+            setError('Price must be a positive number.');
             return;
         }
 
@@ -23,33 +36,56 @@ const SellNotes = () => {
         formData.append('price', price);
         formData.append('category', category);
         formData.append('file', file);
-        formData.append('image', image); 
+        formData.append('image', image);
 
-        // Send data to the backend 
+        const userId = localStorage.getItem('user_id');
+        const token = localStorage.getItem(ACCESS_TOKEN); // Retrieve JWT access token
+        
+        if (!userId) {
+            setError('User ID not found in local storage.');
+            return;
+        }
+
+        if (!token) {
+            setError('Token not found in local storage.');
+            return;
+        }
+
+        formData.append('user', userId); // Attach user ID
+
         try {
-            const response = await fetch('http://127.0.0.1:8000/notes/', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/notes/`, {
                 method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`, // Pass token in Authorization header
+                },
                 body: formData,
             });
+
             if (response.ok) {
-                // Handle successful upload
-                alert('Notes uploaded successfully!');
-                // Optionally reset the form
+                setSnackbarMessage('Notes uploaded successfully!');
+                setSnackbarOpen(true);
+                // Reset form fields
                 setTitle('');
                 setDescription('');
                 setPrice('');
                 setCategory('');
                 setFile(null);
-                setImage(null); 
+                setImage(null);
                 setError('');
             } else {
-                // Handle error response
-                alert('Failed to upload notes.');
+                const errorData = await response.json();
+                setError(errorData?.detail || 'Failed to upload notes. Please try again.');
+                console.error('Error response:', errorData);
             }
         } catch (error) {
             console.error('Error uploading notes:', error);
-            alert('An error occurred while uploading notes.');
+            setError('An error occurred while uploading notes.');
         }
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
     };
 
     return (
@@ -94,19 +130,17 @@ const SellNotes = () => {
                         value={category}
                         onChange={(e) => {
                             setCategory(e.target.value);
-                            setError(''); 
+                            setError('');
                         }}
                     >
                         <MenuItem value="Science">Science</MenuItem>
                         <MenuItem value="Mathematics">Mathematics</MenuItem>
                         <MenuItem value="Literature">Literature</MenuItem>
-                        <MenuItem value="History">Others</MenuItem>
-                        
+                        <MenuItem value="History">History</MenuItem>
                     </Select>
                     {error && <FormHelperText>{error}</FormHelperText>}
                 </FormControl>
 
-                {/* PDF file upload */}
                 <Box sx={{ marginTop: 2 }}>
                     <Typography variant="subtitle1" component="h2" gutterBottom>
                         Upload PDF
@@ -119,15 +153,14 @@ const SellNotes = () => {
                     />
                 </Box>
 
-                {/* Image file upload */}
                 <Box sx={{ marginTop: 2 }}>
                     <Typography variant="subtitle1" component="h2" gutterBottom>
                         Upload Cover Image
                     </Typography>
                     <input
                         type="file"
-                        accept="image/*" // Accepts any image type
-                        onChange={(e) => setImage(e.target.files[0])} 
+                        accept="image/*"
+                        onChange={(e) => setImage(e.target.files[0])}
                         required
                     />
                 </Box>
@@ -138,6 +171,12 @@ const SellNotes = () => {
                     </Button>
                 </Box>
             </form>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+                message={snackbarMessage}
+            />
         </Container>
     );
 };
