@@ -1,9 +1,11 @@
 import React from 'react'
+import Aboutme from './Aboutme'
+
 
 function MyContact() {
   return (
     <div>
-      conatct me
+      <Aboutme/>
     </div>
   )
 }
