@@ -33,7 +33,11 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['user'] = request.user  # Automatically set the user
         return super().create(validated_data)
 
+
 class CartItemSerializer(serializers.ModelSerializer):
+    note_title = serializers.CharField(source='note.title', read_only=True)
+    note_price = serializers.DecimalField(source='note.price', read_only=True, max_digits=10, decimal_places=2)
+
     class Meta:
         model = CartItem
-        fields = ['user', 'title', 'price']
+        fields = ['id', 'user', 'note', 'note_title', 'note_price', 'price']

@@ -23,6 +23,7 @@ class Notes(models.Model):
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    note = models.ForeignKey(Notes, on_delete=models.CASCADE, default=1)  #  note ID
     title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 

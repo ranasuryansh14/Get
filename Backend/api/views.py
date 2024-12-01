@@ -11,7 +11,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .serializers import CartItemSerializer
-
+from rest_framework.decorators import action
 
 # def home(request):
 #     return HttpResponse("This is Homepage")
@@ -57,6 +57,14 @@ class NoteViewSet(viewsets.ViewSet):
         return Response(status=204)
 
 
+    @action(detail=False, methods=['get'], url_path='user-notes')
+    def user_notes(self, request):
+        # Filter notes by the authenticated user
+        user_notes = self.queryset.filter(user=request.user)
+        serializer = self.serializer_class(user_notes, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -83,3 +91,12 @@ class CartItemViewSet(viewsets.ModelViewSet):
         # Filter by user if needed
         user = self.request.user
         return CartItem.objects.filter(user=user)
+
+    def destroy(self, request, pk=None):
+        try:
+            # Get the cart item for the authenticated user
+            cart_item = CartItem.objects.get(pk=pk, user=request.user)
+            cart_item.delete()
+            return Response({'message': 'Item removed successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except CartItem.DoesNotExist:
+            return Response({'error': 'Cart item not found'}, status=status.HTTP_404_NOT_FOUND)
