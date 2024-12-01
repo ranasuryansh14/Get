@@ -1,6 +1,10 @@
 import React from 'react';
 import { Container, Typography, Button, Box } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'; 
+import { ScreenFitText } from './ScreenFitTest';
+
+
+
 
 const Features = () => {
   return (

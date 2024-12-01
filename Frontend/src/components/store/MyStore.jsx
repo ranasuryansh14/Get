@@ -8,56 +8,45 @@ import { ACCESS_TOKEN } from "../../Constants";
 const API_URL = import.meta.env.VITE_API_URL;
 
 function MyStore() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState([]); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
   const [cart, setCart] = useState([]); // State to manage cart items
 
   // Get user ID and token from local storage
-  const userId = localStorage.getItem('user_id'); // Make sure you set this during login
-  const token = localStorage.getItem(ACCESS_TOKEN); // JWT token
+  const userId = localStorage.getItem('user_id');
+  const token = localStorage.getItem(ACCESS_TOKEN);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await Api.get(`${API_URL}notes/`); // Use the custom Api instance
+        const response = await Api.get(`${API_URL}notes/`); 
         setData(response.data);
       } catch (error) {
-        setError('Failed to fetch notes. Please try again later.'); // More user-friendly error message
+        setError('Failed to fetch notes. Please try again later.');
       } finally {
-        setLoading(false); // Ensure loading is set to false in both success and error cases
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
 
-  const handleAddToCart = async (title, price) => {
-    if (!userId) {
-      console.error('User ID is missing');
-      return;
-    }
-    if (!token) {
-      console.error('Token is missing');
-      return;
-    }
+  const handleAddToCart = async (noteId, noteName, price) => {
+    if (!userId || !token) return; 
 
-    const cartItem = {
-      user: userId,  // Send user ID
-      title: title,  // Send item title
-      price: price,  // Send item price
+    const cartItem = { 
+      user: userId,  // Assuming the API expects the user ID
+      note: noteId,  // Send the note ID as the reference
+      name: noteName, // Sending the note name as well
+      price: price,  // Price of the item
+      quantity: 1,   // Default quantity
     };
-
-    // Log the item being added to the cart
-    console.log('Adding to cart:', cartItem);
 
     try {
       const response = await axios.post(`${API_URL}cart/`, cartItem, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add the token in the Authorization header
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log('Item added to cart:', response.data);
       setCart((prevCart) => [...prevCart, response.data]); // Optionally update cart state
     } catch (error) {
       console.error('Failed to add item to cart:', error.response ? error.response.data : error.message);
@@ -78,9 +67,9 @@ function MyStore() {
                 component="img"
                 height="200"
                 width="100%"
-                image={item.image ? `${API_URL}${item.image}` : '/path/to/default_image.jpg'} // Update with actual placeholder
+                image={item.image ? `${API_URL}${item.image}` : '/path/to/default_image.jpg'}
                 alt={item.title}
-                sx={{ borderRadius: '8px 8px 0 0' }} // Rounded corners for the image
+                sx={{ borderRadius: '8px 8px 0 0' }}
               />
               <CardContent sx={{ padding: 2 }}>
                 <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
@@ -101,7 +90,7 @@ function MyStore() {
                   variant="contained"
                   color="primary"
                   sx={{ borderRadius: 2 }}
-                  onClick={() => handleAddToCart(item.title, item.price)} // Add to cart functionality
+                  onClick={() => handleAddToCart(item.id, item.title, item.price)} // Now passing the name as well
                 >
                   Add to Cart
                 </Button>

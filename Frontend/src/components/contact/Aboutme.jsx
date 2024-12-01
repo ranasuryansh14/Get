@@ -25,7 +25,7 @@ const AboutMe = () => {
               Who I Am
             </Typography>
             <Typography variant="body1" paragraph>
-              Hi! I’m Surya, a third-year undergraduate student pursuing a degree in Computer Science Engineering. I’m passionate about technology and software development, exploring new ideas, and creating innovative solutions.
+              Hi! I’m Suryansh Rana, a third-year undergraduate student pursuing a degree in Computer Science Engineering. I’m passionate about technology and software development, exploring new ideas, and creating innovative solutions.
             </Typography>
           </StyledPaper>
         </Grid>

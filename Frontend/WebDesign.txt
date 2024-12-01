@@ -1,0 +1,12 @@
+#Landing page
+    #My Notes
+       -Edit notes
+    #Sell Notes --{Info of notes}
+    #Store --{Add to cart / Buy now}
+
+    -Till here done 
+    
+       -Cart --{Remove / Total / checkout }
+         -Cart Checkout
+         -Bill Payment 
+
