@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {
-    Container, Box, Typography, TextField, Button, Select, MenuItem,
-    FormControl, InputLabel, FormHelperText, Snackbar
+    Container, Grid, Box, Typography, TextField, Button, Select, MenuItem,
+    FormControl, InputLabel, FormHelperText, Snackbar, Card, CardContent
 } from '@mui/material';
-import { ACCESS_TOKEN } from "../../Constants"; // Ensure this matches with your constants file
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { ACCESS_TOKEN } from "../../Constants";
 
 const SellNotes = () => {
     const [title, setTitle] = useState('');
@@ -39,25 +40,20 @@ const SellNotes = () => {
         formData.append('image', image);
 
         const userId = localStorage.getItem('user_id');
-        const token = localStorage.getItem(ACCESS_TOKEN); // Retrieve JWT access token
-        
-        if (!userId) {
-            setError('User ID not found in local storage.');
+        const token = localStorage.getItem(ACCESS_TOKEN);
+
+        if (!userId || !token) {
+            setError('User ID or token not found in local storage.');
             return;
         }
 
-        if (!token) {
-            setError('Token not found in local storage.');
-            return;
-        }
-
-        formData.append('user', userId); // Attach user ID
+        formData.append('user', userId);
 
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/notes/`, {
                 method: 'POST',
                 headers: {
-                    Authorization: `Bearer ${token}`, // Pass token in Authorization header
+                    Authorization: `Bearer ${token}`,
                 },
                 body: formData,
             });
@@ -65,7 +61,6 @@ const SellNotes = () => {
             if (response.ok) {
                 setSnackbarMessage('Notes uploaded successfully!');
                 setSnackbarOpen(true);
-                // Reset form fields
                 setTitle('');
                 setDescription('');
                 setPrice('');
@@ -76,10 +71,8 @@ const SellNotes = () => {
             } else {
                 const errorData = await response.json();
                 setError(errorData?.detail || 'Failed to upload notes. Please try again.');
-                console.error('Error response:', errorData);
             }
         } catch (error) {
-            console.error('Error uploading notes:', error);
             setError('An error occurred while uploading notes.');
         }
     };
@@ -89,88 +82,136 @@ const SellNotes = () => {
     };
 
     return (
-        <Container sx={{ padding: 4 }}>
-            <Typography variant="h4" component="h1" gutterBottom>
-                Sell Your Notes
-            </Typography>
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    label="Title"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                />
-                <TextField
-                    label="Description"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    multiline
-                    rows={4}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    required
-                />
-                <TextField
-                    label="Price"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    type="number"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    required
-                />
-                <FormControl fullWidth margin="normal" required error={Boolean(error)}>
-                    <InputLabel>Category</InputLabel>
-                    <Select
-                        value={category}
-                        onChange={(e) => {
-                            setCategory(e.target.value);
-                            setError('');
-                        }}
-                    >
-                        <MenuItem value="Science">Science</MenuItem>
-                        <MenuItem value="Mathematics">Mathematics</MenuItem>
-                        <MenuItem value="Literature">Literature</MenuItem>
-                        <MenuItem value="History">History</MenuItem>
-                    </Select>
-                    {error && <FormHelperText>{error}</FormHelperText>}
-                </FormControl>
+        <Container maxWidth="lg" sx={{ mt: 5 }}>
+            <Grid container spacing={3} alignItems="center">
+                {/* Left Side - Image */}
+                <Grid item xs={12} md={6}>
+                    <Box sx={{ textAlign: 'center' }}>
+                        <img
+                            src="/images/network.png"
+                            alt="Sell Notes Illustration"
+                            style={{
+                                maxWidth: '90%',
+                                borderRadius: '10px',
+                                boxShadow: '0  rgba(0, 0, 0, 0)',
+                            }}
+                        />
+                    </Box>
+                </Grid>
 
-                <Box sx={{ marginTop: 2 }}>
-                    <Typography variant="subtitle1" component="h2" gutterBottom>
-                        Upload PDF
-                    </Typography>
-                    <input
-                        type="file"
-                        accept="application/pdf"
-                        onChange={(e) => setFile(e.target.files[0])}
-                        required
-                    />
-                </Box>
+                {/* Right Side - Form */}
+                <Grid item xs={12} md={6}>
+                    <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+                        <CardContent>
+                            <Typography variant="h4" component="h1" align="center" gutterBottom>
+                                Sell Your Notes
+                            </Typography>
+                            <form onSubmit={handleSubmit}>
+                                <TextField
+                                    label="Title"
+                                    variant="outlined"
+                                    fullWidth
+                                    margin="normal"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    required
+                                />
+                                <TextField
+                                    label="Description"
+                                    variant="outlined"
+                                    fullWidth
+                                    margin="normal"
+                                    multiline
+                                    rows={4}
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    required
+                                />
+                                <TextField
+                                    label="Price"
+                                    variant="outlined"
+                                    fullWidth
+                                    margin="normal"
+                                    type="number"
+                                    value={price}
+                                    onChange={(e) => setPrice(e.target.value)}
+                                    required
+                                />
+                                <FormControl fullWidth margin="normal" required error={Boolean(error)}>
+                                    <InputLabel>Category</InputLabel>
+                                    <Select
+                                        value={category}
+                                        onChange={(e) => {
+                                            setCategory(e.target.value);
+                                            setError('');
+                                        }}
+                                    >
+                                        <MenuItem value="Science">Science</MenuItem>
+                                        <MenuItem value="Mathematics">Mathematics</MenuItem>
+                                        <MenuItem value="Literature">Literature</MenuItem>
+                                        <MenuItem value="History">History</MenuItem>
+                                    </Select>
+                                    {error && <FormHelperText>{error}</FormHelperText>}
+                                </FormControl>
 
-                <Box sx={{ marginTop: 2 }}>
-                    <Typography variant="subtitle1" component="h2" gutterBottom>
-                        Upload Cover Image
-                    </Typography>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setImage(e.target.files[0])}
-                        required
-                    />
-                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
+    <Box sx={{ flex: 1 }}>
+        <Typography variant="subtitle1" gutterBottom>
+            Upload PDF
+        </Typography>
+        <Button
+            variant="outlined"
+            fullWidth
+            component="label"
+            startIcon={<CloudUploadIcon />}
+        >
+            Choose File
+            <input
+                type="file"
+                accept="application/pdf"
+                hidden
+                onChange={(e) => setFile(e.target.files[0])}
+                required
+            />
+        </Button>
+    </Box>
+    <Box sx={{ flex: 1 }}>
+        <Typography variant="subtitle1" gutterBottom>
+            Upload Cover Image
+        </Typography>
+        <Button
+            variant="outlined"
+            fullWidth
+            component="label"
+            startIcon={<CloudUploadIcon />}
+        >
+            Choose Image
+            <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => setImage(e.target.files[0])}
+                required
+            />
+        </Button>
+    </Box>
+</Box>
 
-                <Box sx={{ marginTop: 2 }}>
-                    <Button variant="contained" color="primary" type="submit">
-                        Upload Notes
-                    </Button>
-                </Box>
-            </form>
+
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                    fullWidth
+                                    sx={{ mt: 3 }}
+                                >
+                                    Upload Notes
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
