@@ -35,6 +35,10 @@ A web platform designed to simplify the buying and selling of academic notes. Th
 *JWT Authentication Login*  
 ![Login Page](./images/Login.png)
 
+### **Upload Notes to sell**  
+*Page where users can upload notes for sale.*  
+![Upload Notes](./images/sell.png) 
+
 ### **Uploaded Notes for Sale**  
 *Page where users can upload and list notes for sale.*  
 ![Uploaded Notes](./images/Uploaded.png)
